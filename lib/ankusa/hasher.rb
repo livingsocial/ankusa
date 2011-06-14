@@ -9,11 +9,20 @@ module Ankusa
     def initialize(text=nil)
       super 0
       @word_count = 0
-      add_text(text) if not text.nil?
+      add_text(text) unless text.nil?
+    end
+
+    def self.atomize(text)
+      text.downcase.to_ascii.tr('-', ' ').gsub(/[^\w\s]/," ").split
+    end
+
+    # word should be only alphanum chars at this point
+    def self.valid_word?(word)
+      return true unless Ankusa::STOPWORDS.include? word || word.length < 3 || word.numeric?
     end
 
     def add_text(text)
-      if text.kind_of? Array
+      if text.instance_of? Array
         text.each { |t| add_text t }
       else
         # replace dashes with spaces, then get rid of non-word/non-space characters, 
@@ -24,24 +33,13 @@ module Ankusa
       self
     end
 
+    protected
+
     def add_word(word)
       @word_count += 1
       key = word.stem.intern
       store key, fetch(key, 0)+1
     end
-
-    def self.atomize(text)
-      text.to_ascii.tr('-', ' ').gsub(/[^\w\s]/," ").split.map { |w| w.downcase }
-    end
-
-    # word should be only alphanum chars at this point
-    def self.valid_word?(word)
-      return false if Ankusa::STOPWORDS.include? word
-      return false if word.length < 3
-      return false if word.numeric?
-      true
-    end
-
   end
 
 end

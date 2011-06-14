@@ -1,12 +1,12 @@
 require 'rubygems'
 require 'bundler'
 require 'rake/testtask'
-require 'rake/rdoctask'
+require 'rdoc/task'
 
 Bundler::GemHelper.install_tasks
 
 desc "Create documentation"
-Rake::RDocTask.new("doc") { |rdoc|
+RDoc::Task.new("doc") { |rdoc|
   rdoc.title = "Ankusa - Naive Bayes classifier with big data storage"
   rdoc.rdoc_dir = 'docs'
   rdoc.rdoc_files.include('README.rdoc')
@@ -23,7 +23,7 @@ Rake::TestTask.new("test_memory") { |t|
 desc "Run all unit tests with HBase storage"
 Rake::TestTask.new("test_hbase") { |t|
   t.libs << "lib"
-  t.test_files = FileList['test/hasher_test.rb', 'test/memory_hbase_test.rb']
+  t.test_files = FileList['test/hasher_test.rb']
   t.verbose = true
 }
 
