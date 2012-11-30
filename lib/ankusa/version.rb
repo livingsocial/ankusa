@@ -1,3 +1,0 @@
-module Ankusa
-  VERSION = "0.0.14"
-end
